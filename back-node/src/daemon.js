@@ -4,7 +4,7 @@ const User = require('./user')
 
 const URL = 'https://reqres.in/api/users'
 
-setTimeout(() => main(), 60 * 1000)
+setInterval(() => main(), 60 * 1000)
 
 async function main() {
   // await User.sync()
