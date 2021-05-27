@@ -12,7 +12,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:node/recommended',
-    'prettier'
+    'prettier',
     'plugin:jest/recommended'
     // 'plugin:prettier/recommended'
   ],
