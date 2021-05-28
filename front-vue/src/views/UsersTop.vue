@@ -3,8 +3,9 @@ div
   div
     input(type="text" @input="search = $event.target.value")
     button(type="button" @click="findUsers") Найти
-    p(v-show='users && users.length === 0') Не найдено
-    table(v-show='users && users.length > 0')
+    p(v-show="!hasData && users !== null && !isError") Не найдено
+    p(v-if="isError") {{users.err.message}}
+    table(v-if="hasData")
       thead
         tr
           th
@@ -38,11 +39,19 @@ export default {
       search: ''
     }
   },
+  computed: {
+    hasData() {
+      return Array.isArray(this.users) && this.users.length > 0
+    },
+    isError() {
+      return this.users !== null && !Array.isArray(this.users)
+    }
+  },
   methods: {
     findUsers() {
       const URL = 'http://localhost:3002/users'
       axios
-        .post(URL, {search:this.search})
+        .post(URL, { search: this.search })
         .then(response => response.data)
         .then(users => (this.users = users))
     }
