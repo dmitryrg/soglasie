@@ -1,5 +1,7 @@
+const path = require('path')
+const config = require('config')
 
-const sequelize = require('./sequelize-connect')
+const sequelize = require(path.join(config.dir.run, 'lib/sequelize-connect'))
 
 const { STRING } = require('sequelize')
 
@@ -22,7 +24,7 @@ const User = sequelize.define(
       allowNull: false
     },
     avatar: {
-      type:  STRING,
+      type: STRING,
       allowNull: true
     }
   },

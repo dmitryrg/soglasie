@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "test-jest": "jest"
+  },
   "dependencies": {
     "@koa/cors": "3.0.0",
+    "config": "1.29.4",
     "koa": "2.4.1",
     "koa-bodyparser": "4.2.0",
     "koa-favicon": "2.1.0",
@@ -21,9 +25,18 @@
     "eslint-plugin-jest": "23.17.0",
     "eslint-plugin-node": "8.0.1",
     "eslint-plugin-prettier": "3.0.1",
+    "jest": "26.0.1",
     "prettier": "1.16.4"
   },
   "engines": {
     "node": ">=10.15.3"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src/tests/"
+    ],
+    "testRegex": [
+      "[\\w\\-]+\\.js$"
+    ]
   }
 }

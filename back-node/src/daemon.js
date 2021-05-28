@@ -1,19 +1,29 @@
 'use strict'
+const path = require('path')
+const config = require('config')
 const superagent = require('superagent')
-const User = require('./user')
 
-const URL = 'https://reqres.in/api/users'
+const User = require(path.join(config.dir.run, 'models/user'))
 
-setInterval(() => main(), 60 * 1000)
+main()
+
+// setInterval(() => main(), 60 * 1000)
 
 async function main() {
   // await User.sync()
 
-  const res = await superagent.get(URL)
+  // todo более оптимальный алгоритм основанный на сравнении записей
+  await User.destroy({
+    where: {},
+    truncate: true
+  })
+
+  const res = await superagent.get(config.url)
 
   for (const user of res.body.data) {
     await User.findOrCreate({
       where: {
+        id: user.id,
         email: user.email,
         firstName: user.first_name,
         lastName: user.last_name,
@@ -21,9 +31,4 @@ async function main() {
       }
     })
   }
-
-  /*  await User.findOrCreate({
-    where: { email: 'george.bluth@reqres.in' },
-    defaults: { firstName: 'Ivan', lastName: 'Ivanov', avatar: '12.12.2012' }
-  })*/
 }
