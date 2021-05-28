@@ -1,58 +1,15 @@
 const _ = require('lodash')
 
 function add(dbRows, apiRows) {
-  const addRows = []
-
-  for (const apiRow of apiRows) {
-    // apiRow - кандидат на добваление
-    // прийдется конвертить названия ключей, так как в db firstName а в api first_name
-    const _apiRow = {}
-    for (const key in apiRow) {
-      _apiRow[camelCase(key)] = apiRow[key]
-    }
-
-    let mayAdd = true
-    for (const dbRow of dbRows) {
-      if (_.isEqual(dbRow, _apiRow)) {
-        mayAdd = false
-        break
-      }
-    }
-
-    if (mayAdd) {
-      addRows.push(_apiRow)
-    }
-  }
-
-  return addRows
+  return apiRows
+    .map(apiRow => objKeysCamelCase(apiRow))
+    .filter(apiRow => !dbRows.find(dbRow => _.isEqual(apiRow, dbRow)))
 }
 
 function del(dbRows, apiRows) {
-  const delRows = []
+  const _apiRows = apiRows.map(apiRow => objKeysCamelCase(apiRow))
 
-  for (const dbRow of dbRows) {
-    // dbRow - кандидат на удаление
-
-    let mayDel = true
-    for (const apiRow of apiRows) {
-      // прийдется конвертить названия ключей, так как в db firstName а в api first_name
-      const _apiRow = {}
-      for (const key in apiRow) {
-        _apiRow[camelCase(key)] = apiRow[key]
-      }
-
-      if (_.isEqual(dbRow, _apiRow)) {
-        mayDel = false
-        break
-      }
-    }
-
-    if (mayDel) {
-      delRows.push(dbRow)
-    }
-  }
-
-  return delRows
+  return dbRows.filter(dbRow => !_apiRows.find(apiRow => _.isEqual(apiRow, dbRow)))
 }
 
 function camelCase(snakeCase) {
@@ -62,6 +19,14 @@ function camelCase(snakeCase) {
       index === 0 ? elem : elem[0].toUpperCase() + elem.slice(1).toLowerCase()
     )
     .join('')
+}
+
+function objKeysCamelCase(obj) {
+  const objKeysCamelCase = {}
+  for (const key in obj) {
+    objKeysCamelCase[camelCase(key)] = obj[key]
+  }
+  return objKeysCamelCase
 }
 
 module.exports = {
