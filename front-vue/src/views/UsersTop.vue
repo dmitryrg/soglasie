@@ -3,7 +3,8 @@ div
   div
     input(type="text" @input="search = $event.target.value")
     button(type="button" @click="findUsers") Найти
-    table(v-show='users.length > 0')
+    p(v-show='users && users.length === 0') Не найдено
+    table(v-show='users && users.length > 0')
       thead
         tr
           th
@@ -33,7 +34,7 @@ export default {
   name: 'UsersTop',
   data: () => {
     return {
-      users: [],
+      users: null,
       search: ''
     }
   },
