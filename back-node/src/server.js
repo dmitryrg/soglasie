@@ -19,13 +19,18 @@ app.use(cors())
 const router = new Router()
 
 router.post('/users', async ctx => {
-  console.log('ctx.request.body ->', await ctx.request.body) // debug
-  const search = (await ctx.request.body).search
+  try {
+    const search = (await ctx.request.body).search
 
-  const filterByFirstName = await User.findAll({ where: { firstName: search } })
-  const filterByLastName = await User.findAll({ where: { lastName: search } })
+    const filterByFirstName = await User.findAll({ where: { firstName: search } })
+    const filterByLastName = await User.findAll({ where: { lastName: search } })
 
-  ctx.response.body = filterByFirstName.concat(filterByLastName)
+    ctx.response.body = filterByFirstName.concat(filterByLastName)
+  } catch (err) {
+    ctx.response.body = { err: { code: 500, message: 'ошибка сервера' } }
+    console.log('err ->', err) // debug
+  }
+  // console.log('ctx.request.body ->', await ctx.request.body) // debug
 })
 
 // подцепляем роутер
