@@ -6,5 +6,6 @@ module.exports = {
     root,
     run: path.join(root, 'src')
   },
-  url: 'https://reqres.in/api/users'
+  url: 'https://reqres.in/api/users',
+  refresh: 1 // время обновления в минутах
 }

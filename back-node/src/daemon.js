@@ -4,31 +4,30 @@ const config = require('config')
 const superagent = require('superagent')
 
 const User = require(path.join(config.dir.run, 'models/user'))
+const sx = require(path.join(config.dir.run, 'db-sync'))
 
 main()
 
-// setInterval(() => main(), 60 * 1000)
+setInterval(() => main(), config.refresh * 60 * 1000)
 
 async function main() {
   // await User.sync()
 
-  // todo более оптимальный алгоритм основанный на сравнении записей
-  await User.destroy({
-    where: {},
-    truncate: true
-  })
+  const dataApi = (await superagent.get(config.url)).body.data
+  const dataDb = (await User.findAll()).map(user => user.dataValues)
 
-  const res = await superagent.get(config.url)
+  const addRows = sx.add(dataDb, dataApi)
+  const delRows = sx.del(dataDb, dataApi)
 
-  for (const user of res.body.data) {
+  for (const user of delRows) {
+    await User.destroy({
+      where: user
+    })
+  }
+
+  for (const user of addRows) {
     await User.findOrCreate({
-      where: {
-        id: user.id,
-        email: user.email,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        avatar: user.avatar
-      }
+      where: user
     })
   }
 }
