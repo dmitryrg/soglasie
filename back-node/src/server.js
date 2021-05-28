@@ -1,13 +1,14 @@
 'use strict'
-
-const PORT = 3002
+const path = require('path')
+const config = require('config')
 
 const Koa = require('koa')
 const favicon = require('koa-favicon')
 const bodyParser = require('koa-bodyparser')
 const Router = require('koa-router')
 const cors = require('@koa/cors')
-const User = require('./user')
+
+const User = require(path.join(config.dir.run, 'models/user'))
 
 const app = new Koa()
 
@@ -31,5 +32,5 @@ router.post('/users', async ctx => {
 app.use(router.routes())
 
 // слушаем сервер
-app.listen(PORT)
-console.log(`Server start on port ${PORT}`) // debug
+app.listen(config.port)
+console.log(`Server start on port ${config.port}`) // debug
