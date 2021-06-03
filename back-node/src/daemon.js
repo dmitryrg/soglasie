@@ -11,11 +11,19 @@ main()
 setInterval(() => main(), config.refresh * 60 * 1000)
 
 async function main() {
-  // await User.sync()
+  await User.sync({force:true})
   console.log('daemon run ->')
 
   try {
-    const dataApi = (await superagent.get(config.url)).body.data
+    let dataApi = []
+    for (let i = 1; true; i++) {
+      const chunkApi = (await superagent.get(`${config.url}?page=${i}`)).body.data
+      if (chunkApi.length === 0) {
+        break
+      }
+      dataApi = dataApi.concat(chunkApi)
+    }
+
     const dataDb = (await User.findAll()).map(user => user.dataValues)
 
     const addRows = sx.add(dataDb, dataApi)

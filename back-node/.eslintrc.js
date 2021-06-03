@@ -20,6 +20,7 @@ module.exports = {
     'prettier/prettier': 'warn',
     'no-console': 'off',
     'no-useless-escape': 'off',
+    'no-constant-condition': 'off',
     'use-isnan': 'off',
     'no-case-declarations': 'off',
     'no-inner-declarations': 'off',
