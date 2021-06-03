@@ -11,7 +11,7 @@ main()
 setInterval(() => main(), config.refresh * 60 * 1000)
 
 async function main() {
-  await User.sync({force:true})
+  // await User.sync({force:true})
   console.log('daemon run ->')
 
   try {
